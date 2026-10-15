@@ -3,9 +3,9 @@ const mysql = require("mysql2");
 const pool = mysql.createConnection({
     'user': 'root',
     'password': 'root',
-    'database': 'campeoes_f1',
+    'database': 'mydb',
     'host': 'localhost',
-    'port': 3306
+    'port': 3307
 });
 
 exports.execute = (query, params = [], var_pool = pool) => {

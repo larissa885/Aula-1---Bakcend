@@ -1,0 +1,235 @@
+/* Reset & Configurações de Cores do Tema */
+:root {
+    --bg-primary: #f8fafc;
+    --bg-sidebar: #0f172a;
+    --text-main: #334155;
+    --brand-color: #4f46e5;
+    --brand-hover: #4338ca;
+    --border-color: #e2e8f0;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+}
+
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+  font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+}
+
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-main);
+    min-height: 100vh;
+}
+
+/* Layout Dashboard (Sidebar fixa + Conteúdo Flex) */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 260px;
+    background-color: var(--bg-sidebar);
+    color: white;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.sidebar h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #f1f5f9;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nav-btn:hover, .nav-btn.active {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.nav-btn.active {
+    background-color: var(--brand-color);
+}
+
+/* Conteúdo de Telas */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.content-header {
+    margin-bottom: 30px;
+}
+
+.content-header h1 {
+    font-size: 1.8rem;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.content-header code {
+    background: #e2e8f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+/* Tabelas Estilizadas */
+.table-container {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th {
+    background-color: #f8fafc;
+    padding: 14px 18px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #64748b;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+}
+
+td {
+    padding: 14px 18px;
+    font-size: 0.95rem;
+    border-bottom: 1px solid var(--border-color);
+    color: #334155;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Componentes de Formulários e Filtros */
+.form-card, .action-box, .report-box {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #475569;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--brand-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.filter-box, .filter-box-sm {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+    max-width: 500px;
+}
+
+/* Botões Padronizados */
+button.btn-primary, button.btn-success {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-primary { background: var(--brand-color); color: white; }
+.btn-primary:hover { background: var(--brand-hover); }
+.btn-success { background: var(--success); color: white; }
+.btn-success:hover { background: #059669; }
+
+/* Estruturas de Grid e Listas Relatório */
+.grid-2-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.report-list {
+    list-style: none;
+    margin-top: 15px;
+}
+
+.report-list li {
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    border-left: 4px solid var(--brand-color);
+}
+
+.critical { border-left-color: var(--danger) !important; background: #fef2f2 !important;}
+.excess { border-left-color: var(--warning) !important; background: #fffbeb !important;}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
