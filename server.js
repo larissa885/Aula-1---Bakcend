@@ -1,7 +1,12 @@
 const app = require('./app');
-const dotenv = require('dotenv');
-dotenv.config();
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
-console.log(`Servidor rodando em http://localhost:${port}`);
-});
+
+// Vercel treats this exported Express app as the serverless request handler.
+module.exports = app;
+
+// Keep `npm start` working for local development.
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Servidor rodando em http://localhost:${port}`);
+  });
+}
