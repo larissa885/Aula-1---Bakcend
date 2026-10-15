@@ -1,12 +1,39 @@
 const API_BASE = '/produtos';
 
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  const now = new Date();
+  const hoje = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-');
+  ['mov-data-inicio', 'mov-data-fim', 'saidas-data-inicio', 'saidas-data-fim'].forEach(id => {
+    const campo = document.getElementById(id);
+    if (campo) campo.value = hoje;
+  });
+  verificarConexao();
   carregarProdutos();
   carregarValorTotal();
 });
 
+async function verificarConexao() {
+  const status = document.getElementById('conexao-status');
+  if (!status) return;
+  try {
+    const response = await fetch('/health');
+    const result = await response.json();
+    status.textContent = response.ok && result.database === 'connected'
+      ? 'Banco conectado'
+      : 'Banco indisponivel. Confira DATABASE_URL e o estado do Neon.';
+    status.dataset.status = response.ok ? 'ok' : 'error';
+  } catch (error) {
+    status.textContent = 'Nao foi possivel consultar o estado do banco.';
+    status.dataset.status = 'error';
+  }
+}
+
 // Navegação entre abas
-function switchTab(tabId) {
+function switchTab(tabId, button) {
   const tabs = document.querySelectorAll('.tab-content');
   tabs.forEach(tab => tab.style.display = 'none');
 
@@ -16,9 +43,7 @@ function switchTab(tabId) {
   const selectedTab = document.getElementById(tabId);
   if (selectedTab) selectedTab.style.display = 'block';
 
-  if (event && event.target) {
-    event.target.classList.add('active');
-  }
+  if (button) button.classList.add('active');
 
   // Ações de recarga por aba
   if (tabId === 'produtos-tab') {
@@ -28,6 +53,7 @@ function switchTab(tabId) {
     buscarMovimentacoes();
   } else if (tabId === 'relatorios-tab') {
     carregarLimites();
+    carregarSaidasHoje();
     buscarMaioresSaidas();
   }
 }
@@ -53,13 +79,13 @@ async function carregarProdutos() {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${p.id}</td>
-        <td>${p.nome}</td>
-        <td>${p.categoria || '-'}</td>
-        <td>${p.unidade_medida || '-'}</td>
+        <td>${escapeHtml(p.nome)}</td>
+        <td>${escapeHtml(p.categoria || '-')}</td>
+        <td>${escapeHtml(p.unidade_medida || '-')}</td>
         <td>${p.quantidade}</td>
         <td>R$ ${Number(p.valor).toFixed(2)}</td>
         <td>
-          <button type="button" class="btn-sm" onclick="selecionarProdutoEntrada(${p.id})">Entrada</button>
+          <button type="button" class="btn-sm" onclick="selecionarProdutoEntrada(${Number(p.id)})">Entrada</button> <button type="button" class="btn-sm" onclick="selecionarProdutoSaida(${Number(p.id)})">Saida</button>
         </td>
       `;
       tbody.appendChild(tr);
@@ -86,7 +112,7 @@ async function carregarValorTotal() {
     }
 
     container.innerHTML = dados.map(item => `
-      <p><strong>${item.categoria}:</strong> R$ ${Number(item.valor_total || 0).toFixed(2)}</p>
+      <p><strong>${escapeHtml(item.categoria || 'Sem categoria')}:</strong> R$ ${Number(item.valor_total || 0).toFixed(2)}</p>
     `).join('');
   } catch (err) {
     console.error(err);
@@ -114,6 +140,7 @@ async function confirmarEntrada(event) {
       alert('Entrada efetuada com sucesso!');
       document.getElementById('form-entrada').reset();
       carregarProdutos();
+      carregarValorTotal();
     } else {
       alert(data.error || 'Erro ao registrar entrada.');
     }
@@ -128,6 +155,33 @@ function selecionarProdutoEntrada(id) {
   if (inputId) {
     inputId.value = id;
     inputId.focus();
+  }
+}
+
+function selecionarProdutoSaida(id) {
+  const campo = document.getElementById('saida-id');
+  if (campo) { campo.value = id; campo.focus(); }
+}
+
+async function confirmarSaida(event) {
+  event.preventDefault();
+  const id = Number(document.getElementById('saida-id').value);
+  const quantidade = Number(document.getElementById('saida-qtd').value);
+  try {
+    const res = await fetch(API_BASE + '/saida', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, quantidade })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Erro ao registrar saida.');
+    alert(data.message || 'Saida registrada com sucesso!');
+    document.getElementById('form-saida').reset();
+    carregarProdutos();
+    carregarValorTotal();
+  } catch (err) {
+    console.error(err);
+    alert(err.message || 'Erro de conexao com o servidor.');
   }
 }
 
@@ -159,7 +213,7 @@ async function cadastrarProduto(event) {
     if (res.ok) {
       alert('Produto cadastrado com sucesso!');
       document.getElementById('form-cadastro').reset();
-      switchTab('produtos-tab');
+      switchTab('produtos-tab', document.querySelector('.nav-btn'));
     } else {
       alert(data.error || 'Erro ao cadastrar produto.');
     }
@@ -192,8 +246,8 @@ async function buscarMovimentacoes() {
     dados.forEach(m => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${m.nome_do_produto}</td>
-        <td>${m.unidade_medida}</td>
+        <td>${escapeHtml(m.nome_do_produto)}</td>
+        <td>${escapeHtml(m.unidade_medida)}</td>
         <td>${m.total_de_entradas}</td>
         <td>${m.total_de_saidas}</td>
         <td>${m.saida_no_periodo}</td>
@@ -227,12 +281,31 @@ async function carregarLimites() {
 
     dados.forEach(item => {
       const li = document.createElement('li');
-      li.innerHTML = `<strong>${item.nome}</strong>: Qtd Atual ${item.quantidade}`;
+      li.innerHTML = `<strong>${escapeHtml(item.nome)}</strong>: Qtd Atual ${item.quantidade}`;
       lista.appendChild(li);
     });
   } catch (err) {
     console.error(err);
     lista.innerHTML = '<li>Erro ao carregar limites.</li>';
+  }
+}
+
+async function carregarSaidasHoje() {
+  const lista = document.getElementById('saidas-lista');
+  if (!lista) return;
+  try {
+    const response = await fetch(API_BASE + '/saidas?hoje=true');
+    if (!response.ok) throw new Error('Request failed');
+    const rows = await response.json();
+    lista.innerHTML = '';
+    if (!rows.length) { lista.innerHTML = '<li>Nenhuma saida registrada hoje.</li>'; return; }
+    rows.forEach(row => {
+      const item = document.createElement('li');
+      item.textContent = 'Produto #' + row.produtos_id + ': ' + row.quantidade + ' un - ' + row.datas;
+      lista.appendChild(item);
+    });
+  } catch (error) {
+    lista.innerHTML = '<li>Erro ao carregar saidas do dia.</li>';
   }
 }
 
@@ -258,7 +331,7 @@ async function buscarMaioresSaidas() {
 
     dados.forEach(item => {
       const li = document.createElement('li');
-      li.innerHTML = `<strong>${item.nome_do_produto}</strong>: ${item.quantidade_total_de_saidas} un (R$ ${Number(item.valor_total_financeiro_das_saidas).toFixed(2)})`;
+      li.innerHTML = `<strong>${escapeHtml(item.nome_do_produto)}</strong>: ${item.quantidade_total_de_saidas} un (R$ ${Number(item.valor_total_financeiro_das_saidas).toFixed(2)})`;
       lista.appendChild(li);
     });
   } catch (err) {

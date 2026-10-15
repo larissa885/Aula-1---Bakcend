@@ -1,20 +1,21 @@
 {
-    "name": "tantantan",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-        "start": "node server.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "cors": "^2.8.6",
-        "dotenv": "^18.0.8",
-        "express": "^5.2.1",
-        "http": "^0.0.1-security",
-        "nodemon": "^3.1.11",
-        "pg": "^8.23.1"
-    }
+  "name": "tantantan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.8",
+    "express": "^5.2.1",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
 }

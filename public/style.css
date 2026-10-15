@@ -233,3 +233,15 @@ button.btn-primary, button.btn-success {
     from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+@media (max-width: 800px) {
+  .dashboard-container { flex-direction: column; }
+  .sidebar { width: 100%; gap: 16px; }
+  .sidebar nav { flex-direction: row; flex-wrap: wrap; }
+  .nav-btn { flex: 1 1 140px; }
+  .main-content { padding: 20px; }
+  .grid-2-col { grid-template-columns: 1fr; }
+  .table-container { overflow-x: auto; }
+  table { min-width: 680px; }
+  .filter-box, .filter-box-sm { flex-wrap: wrap; }
+}
