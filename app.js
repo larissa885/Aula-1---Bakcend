@@ -1,10 +1,14 @@
+const dotenv = require('dotenv');
+dotenv.config();
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
-const connection = require('./db');
+require('./db');
+
 const app = express();
-dotenv.config();
+app.use(cors());
 app.use(express.json());
-const produtosRoutes = require ('./routes/produtos');
-app.use ('/produtos', produtosRoutes);
+
+const produtosRoutes = require('./routes/produtos');
+app.use('/produtos', produtosRoutes);
+
 module.exports = app;
