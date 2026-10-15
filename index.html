@@ -61,7 +61,7 @@
                 <!-- Modal / Formulário rápido de Entrada de Estoque (Rota 8) -->
                 <div class="action-box">
                     <h3>🔄 Registrar Entrada no Estoque (Rota 8)</h3>
-                    <form id="form-entrada">
+                    <form id="form-entrada" onsubmit="confirmarEntrada(event)">
                         <input type="number" id="entrada-id" placeholder="ID do Produto" required>
                         <input type="number" id="entrada-qtd" placeholder="Quantidade de Entrada" required>
                         <button type="submit" class="btn-success">Confirmar Entrada</button>
@@ -70,14 +70,14 @@
             </div>
 
             <!-- ABA 2: CADASTRO DE PRODUTOS -->
-            <div id="cadastro-tab" class="tab-content">
+            <div id="cadastro-tab" class="tab-content" style="display: none;">
                 <header class="content-header">
                     <h1>Cadastrar Novo Produto</h1>
                     <p>Rota ativa: <code>POST /produtos/cadastrar</code></p>
                 </header>
 
                 <div class="form-card">
-                    <form id="form-cadastro">
+                    <form id="form-cadastro" onsubmit="cadastrarProduto(event)">
                         <div class="form-group">
                             <label for="cad-nome">Nome do Produto</label>
                             <input type="text" id="cad-nome" required placeholder="Ex: Bodysplash">
@@ -104,7 +104,7 @@
             </div>
 
             <!-- ABA 3: FILTRO DE MOVIMENTAÇÕES POR PERÍODO -->
-            <div id="movimentacoes-tab" class="tab-content">
+            <div id="movimentacoes-tab" class="tab-content" style="display: none;">
                 <header class="content-header">
                     <h1>Movimentações no Período (7 campos obrigatórios)</h1>
                     <p>Rota ativa: <code>GET /produtos/movimentacoes</code></p>
@@ -113,64 +113,4 @@
                 <div class="filter-box">
                     <input type="date" id="mov-data-inicio" value="2026-05-01">
                     <input type="date" id="mov-data-fim" value="2026-05-31">
-                    <button class="btn-primary" onclick="buscarMovimentacoes()">Filtrar Período</button>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nome do Produto</th>
-                                <th>Unidade Medida</th>
-                                <th>Total Entradas</th>
-                                <th>Total Saídas</th>
-                                <th>Saldo Período</th>
-                                <th>Financ. Entradas</th>
-                                <th>Financ. Saídas</th>
-                            </tr>
-                        </thead>
-                        <tbody id="movimentacoes-table-body">
-                            <tr><td colspan="7" class="text-center">Defina as datas e clique em filtrar.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- ABA 4: LIMITES E MAIORES SAÍDAS -->
-            <div id="relatorios-tab" class="tab-content">
-                <header class="content-header">
-                    <h1>Relatórios Avançados e Alertas críticos</h1>
-                </header>
-
-                <div class="grid-2-col">
-                    <!-- Limites Mínimos e Máximos (Rota 11) -->
-                    <div class="report-box">
-                        <h2>⚠️ Alertas de Limite (Qtd ≤ 0 ou ≥ 100)</h2>
-                        <p class="subtitle">Rota: <code>GET /produtos/limites</code></p>
-                        <ul id="limites-lista" class="report-list">
-                            <!-- Inserido dinamicamente -->
-                        </ul>
-                    </div>
-
-                    <!-- Maiores Saídas (Rota 13) -->
-                    <div class="report-box">
-                        <h2>🔥 Maiores Volumes de Saída</h2>
-                        <p class="subtitle">Rota: <code>GET /produtos/maiores-saidas</code></p>
-                        <div class="filter-box-sm">
-                            <input type="date" id="saidas-data-inicio" value="2026-05-01">
-                            <input type="date" id="saidas-data-fim" value="2026-05-31">
-                            <button class="btn-primary" onclick="buscarMaioresSaidas()">Ver</button>
-                        </div>
-                        <ul id="maiores-saidas-lista" class="report-list">
-                            <!-- Inserido dinamicamente -->
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-        </main>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
+                    <button class="btn-primary" type="button" onclick="buscar

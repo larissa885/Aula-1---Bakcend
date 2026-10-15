@@ -1,20 +1,25 @@
-const dotenv = require('dotenv');
-dotenv.config();
 const express = require('express');
 const path = require('path');
-require('./db');
+const cors = require('cors');
+
+// Importa suas rotas (sua pasta se chama 'rotas' no VS Code)
+const produtosRoutes = require('./rotas/produtos');
 
 const app = express();
+
+// Middlewares
+app.use(cors());
 app.use(express.json());
 
-const produtosRoutes = require('./rotas/produtos');
+// Servir arquivos estáticos (HTML, CSS, JS) da RAIZ do projeto
+app.use(express.static(__dirname));
+
+// Rotas da aplicação
 app.use('/produtos', produtosRoutes);
 
+// Rota principal para servir o index.html
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
-});
-app.get('/style.css', (req, res) => {
-  res.sendFile(path.join(__dirname, 'style.css'));
 });
 
 module.exports = app;
