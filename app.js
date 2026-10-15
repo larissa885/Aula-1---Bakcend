@@ -2,24 +2,25 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 
-// Importa suas rotas (sua pasta se chama 'rotas' no VS Code)
 const produtosRoutes = require('./rotas/produtos');
 
 const app = express();
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Servir arquivos estáticos (HTML, CSS, JS) da RAIZ do projeto
-app.use(express.static(__dirname));
+// Trata o favicon para evitar erros de servidor
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
-// Rotas da aplicação
+// Serve os ficheiros estáticos da pasta public
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Rotas da API
 app.use('/produtos', produtosRoutes);
 
-// Rota principal para servir o index.html
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+// Rota padrão para servir o index.html da pasta public
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 module.exports = app;
