@@ -532,3 +532,106 @@ button.btn-sm { border: 1px solid #e5e7ff; font-size: 0.78rem; }
   .action-box { padding: 18px; }
   .report-box { padding: 19px; }
 }
+
+/* Tema escuro: azul ardósia com destaque violeta */
+:root {
+  color-scheme: dark;
+  --bg-primary: #0b1020;
+  --bg-sidebar: #090d19;
+  --text-main: #dbe4f2;
+  --brand-color: #8b83ff;
+  --brand-hover: #a39dff;
+  --border-color: #29334a;
+  --success: #34d399;
+  --danger: #fb7185;
+  --warning: #fbbf24;
+}
+
+body {
+  color: #dbe4f2;
+  background:
+    radial-gradient(ellipse at 88% 2%, rgba(124, 111, 255, 0.13), transparent 32rem),
+    #0b1020;
+}
+.sidebar {
+  background: linear-gradient(155deg, #090d19 0%, #11172a 58%, #211c4b 100%);
+  box-shadow: 8px 0 28px rgba(0, 0, 0, 0.22);
+}
+.sidebar::after { background: rgba(124, 111, 255, 0.1); }
+.sidebar h2 { color: #f1f5ff; }
+.nav-btn { color: #a9b4c9; }
+.nav-btn:hover, .nav-btn.active { color: #f8f7ff; }
+.nav-btn.active {
+  border-color: rgba(167, 160, 255, 0.2);
+  background: linear-gradient(100deg, rgba(124, 111, 255, 0.28), rgba(124, 111, 255, 0.12));
+  box-shadow: inset 3px 0 #a7a0ff, 0 5px 18px rgba(0, 0, 0, 0.14);
+}
+
+.content-header { border-bottom-color: #252e43; }
+.content-header::after { background: #8b83ff; }
+.content-header h1, .card h3, .action-box h3, .report-box h2 { color: #edf2ff; }
+.content-header p, .report-box > p { color: #9aa8bf; }
+.content-header code { color: #c0bbff; background: #20203c; }
+
+#conexao-status {
+  color: #b8c4d9;
+  border-color: #303a51;
+  background: #151c2e;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+#conexao-status[data-status="ok"] { color: #6ee7b7; background: #102a28; border-color: #1b5147; }
+#conexao-status[data-status="error"] { color: #fda4af; background: #311b2a; border-color: #633044; }
+
+.card, .form-card, .action-box, .report-box, .table-container {
+  border-color: #283249;
+  background: #131a2b;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+}
+.card { background: linear-gradient(120deg, #151d30 0%, #171a32 100%); }
+.card::after { border-color: rgba(139, 131, 255, 0.09); }
+.card p { color: #c4cee0; border-bottom-color: #273148; }
+
+th { color: #aab6cb; background: #192237; border-bottom-color: #2b3650; }
+td { color: #d0d9e9; border-bottom-color: #252f44; }
+tbody tr:hover { background: #1a2238; }
+tr:last-child td, tbody tr:last-child td { border-bottom: none; }
+
+.action-box h3::before { background: #9b93ff; box-shadow: 0 0 0 5px rgba(139, 131, 255, 0.13); }
+.form-group label, .filter-box label, .filter-box-sm label { color: #b9c5d9; }
+input, select,
+.action-box input, .form-card input,
+.filter-box input, .filter-box-sm input {
+  color: #e7edf8;
+  border-color: #34405a;
+  background: #0e1525;
+  color-scheme: dark;
+}
+input::placeholder { color: #8290a8; }
+.action-box input:focus, .form-card input:focus,
+.filter-box input:focus, .filter-box-sm input:focus,
+input:focus-visible {
+  border-color: #8b83ff;
+  background: #111a2d;
+  box-shadow: 0 0 0 4px rgba(139, 131, 255, 0.16);
+}
+.filter-box, .filter-box-sm { border-color: #29334a; background: #131a2b; }
+
+.btn-primary { color: #fff; background: linear-gradient(135deg, #7168ef, #574fca); }
+.btn-primary:hover { background: linear-gradient(135deg, #8179fb, #655ddd); }
+.btn-success { color: #05251c; background: linear-gradient(135deg, #5ee4b2, #34c995); }
+.btn-success:hover { background: linear-gradient(135deg, #7aefc4, #47d9a6); }
+button.btn-primary, button.btn-success { box-shadow: 0 5px 16px rgba(0, 0, 0, 0.22); }
+button.btn-sm { color: #c6c1ff; border-color: #39365f; background: #242342; }
+button.btn-sm:hover { color: #eeecff; background: #302d59; }
+
+.report-list li { color: #d1d9e8; border-color: #2a354a; background: #182135; }
+.critical { color: #fecdd3 !important; border-left-color: #fb7185 !important; background: #351d2b !important; }
+.excess { color: #fde68a !important; border-left-color: #fbbf24 !important; background: #332b1c !important; }
+
+button:focus-visible, input:focus-visible {
+  outline-color: rgba(167, 160, 255, 0.7);
+}
+
+@media (max-width: 800px) {
+  .sidebar { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22); }
+}
