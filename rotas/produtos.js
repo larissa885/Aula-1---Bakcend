@@ -22,6 +22,27 @@ router.get('/listar', async (req, res) => {
   }
 });
 
+// Excluir produto e seu historico de movimentacoes de forma atomica
+router.delete('/:id', async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({ error: 'Informe um ID valido' });
+  }
+  try {
+    const result = await db.transaction(async (client) => {
+      await client.query('DELETE FROM movimentacoes WHERE produtos_id = $1', [id]);
+      return client.query('DELETE FROM produtos WHERE id = $1 RETURNING id', [id]);
+    });
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Produto nao encontrado' });
+    }
+    res.status(200).json({ message: 'Produto e movimentacoes excluidos com sucesso' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao excluir produto' });
+  }
+});
+
 // 2. Cadastrar produto
 router.post('/cadastrar', async (req, res) => {
   const { nome, quantidade, valor, categoria, unidade_medida } = req.body || {};

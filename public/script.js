@@ -85,7 +85,7 @@ async function carregarProdutos() {
         <td>${p.quantidade}</td>
         <td>R$ ${Number(p.valor).toFixed(2)}</td>
         <td>
-          <button type="button" class="btn-sm" onclick="selecionarProdutoEntrada(${Number(p.id)})">Entrada</button> <button type="button" class="btn-sm" onclick="selecionarProdutoSaida(${Number(p.id)})">Saida</button>
+          <button type="button" class="btn-sm" onclick="selecionarProdutoEntrada(${Number(p.id)})">Entrada</button> <button type="button" class="btn-sm" onclick="selecionarProdutoSaida(${Number(p.id)})">Saida</button> <button type="button" class="btn-sm" onclick="excluirProduto(${Number(p.id)})">Excluir</button>
         </td>
       `;
       tbody.appendChild(tr);
@@ -93,6 +93,21 @@ async function carregarProdutos() {
   } catch (err) {
     console.error(err);
     tbody.innerHTML = '<tr><td colspan="7" class="text-center">Erro ao carregar produtos.</td></tr>';
+  }
+}
+
+async function excluirProduto(id) {
+  if (!confirm(`Excluir o produto #${id} e todas as suas movimentacoes? Esta acao nao pode ser desfeita.`)) return;
+  try {
+    const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Erro ao excluir produto.');
+    carregarProdutos();
+    carregarValorTotal();
+    alert(data.message || 'Produto excluido com sucesso.');
+  } catch (err) {
+    console.error(err);
+    alert(err.message || 'Erro de conexao com o servidor.');
   }
 }
 
